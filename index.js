@@ -35,6 +35,10 @@ const generateId = () => {
   return Math.floor(Math.random() * 1000)
 }
 
+const checkName = (name) => {
+    return persons.find(p => p.name.toLowerCase() === name.trim().toLowerCase())
+  }
+
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
@@ -64,12 +68,17 @@ app.post('/api/persons', (req, res) => {
 
   if (!body.name) {
     return res.status(400).json({ 
-      error: 'Name missing' 
+      error: 'Name missing.' 
     })
   }
   if (!body.number) {
     return res.status(400).json({ 
-      error: 'Number missing' 
+      error: 'Number missing.' 
+    })
+  }
+  if (checkName(body.name) !== undefined) {
+    return res.status(400).json({ 
+      error: `${body.name} is already added to the phonebook.` 
     })
   }
 
