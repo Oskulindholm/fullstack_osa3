@@ -14,7 +14,7 @@ app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 
-
+/*
 const checkPerson = pName => {
   console.log(pName)
   Person.find({ name: `${pName}` })
@@ -29,6 +29,7 @@ const checkPerson = pName => {
 const generateId = () => {
   return Math.floor(Math.random() * 1000)
 }
+*/
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
@@ -61,31 +62,20 @@ app.get('/api/persons/:id', (req, res, next) => {
 })
 
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
-
   console.log(body)
-  if (!body.name) {
-    return res.status(400).json({ 
-      error: 'Name missing.' 
-    })
-  }
-  if (!body.number) {
-    return res.status(400).json({ 
-      error: 'Number missing.' 
-    })
-  }
   
   const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
   })
   
-  person.save().then(savedPerson => {
-    res.json(savedPerson)
-  })
-  .catch(error => next(error))
+  person.save()
+    .then(savedPerson => {
+      res.json(savedPerson)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
@@ -98,7 +88,7 @@ app.put('/api/persons/:id', (req, res, next) => {
   }
   Person.findByIdAndUpdate(id, person, {new: true}).then(updatedPerson => {
     res.json(updatedPerson)
-  })
+  }) 
   .catch(error => next(error))
 
 })
@@ -122,7 +112,9 @@ const errorHandler = (err, req, res, next) => {
   console.error(err.message)
 
   if (err.name === 'CastError') {
-    res.status(400).send({ error: 'Malformatted id' })
+    return res.status(400).send({ error: 'Malformatted id' })
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).json({ error: err.message })
   }
 
   next(err)
