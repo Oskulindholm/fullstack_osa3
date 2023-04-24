@@ -16,13 +16,21 @@ app.use(cors())
 
 let persons = []
 
+
+const checkPerson = pName => {
+  console.log(pName)
+  Person.find({ name: `${pName}` })
+    .then(p => {
+      console.log(`${p} found\n`)
+      //console.log(`${p}\n`)
+      console.log(p[0]._id)
+      return p._id
+    })
+}
+
 const generateId = () => {
   return Math.floor(Math.random() * 1000)
 }
-
-const checkName = (name) => {
-    return persons.find(p => p.name.toLowerCase() === name.trim().toLowerCase())
-  }
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
@@ -52,9 +60,11 @@ app.get('/api/persons/:id', (req, res, next) => {
     next(error)})
 })
 
+
 app.post('/api/persons', (req, res) => {
   const body = req.body
 
+  console.log(body)
   if (!body.name) {
     return res.status(400).json({ 
       error: 'Name missing.' 
@@ -65,25 +75,34 @@ app.post('/api/persons', (req, res) => {
       error: 'Number missing.' 
     })
   }
-  /*if (checkName(body.name) !== undefined) {
-    return res.status(400).json({ 
-      error: `${body.name} is already added to the phonebook.` 
-    })
-  }*/
-
+  
   const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId(),
   })
-
+  
   person.save().then(savedPerson => {
     res.json(savedPerson)
   })
-
+  .catch(error => next(error))
+  
   persons = persons.concat(person)
+})
 
-  console.log(person)
+app.put('/api/persons/:id', (req, res, next) => {
+  const id = req.params.id
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+  Person.findByIdAndUpdate(id, person, {new: true}).then(updatedPerson => {
+    res.json(updatedPerson)
+  })
+  .catch(error => next(error))
+
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -105,9 +124,7 @@ const errorHandler = (err, req, res, next) => {
   console.error(err.message)
 
   if (err.name === 'CastError') {
-    {
-      res.status(400).send({ error: 'Malformatted id' })
-    }
+    res.status(400).send({ error: 'Malformatted id' })
   }
 
   next(err)

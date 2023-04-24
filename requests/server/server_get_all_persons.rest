@@ -1,1 +1,1 @@
-GET https://fullstack-part3-onkl.onrender.com/api/persons
+GET http://fullstack-part3-onkl.onrender.com/api/persons
