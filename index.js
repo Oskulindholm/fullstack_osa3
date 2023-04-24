@@ -14,8 +14,6 @@ app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(cors())
 
-let persons = []
-
 
 const checkPerson = pName => {
   console.log(pName)
@@ -37,8 +35,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-    const now = new Date()
-    res.send(`Phonebook has info on ${persons.length} people.<br>${now}`)
+  const now = new Date()
+  Person.find({}).then(persons => {
+    res.send(`<p>Phonebook has info on ${persons.length} people.<br>${now}</p>`)
+  })
 })
 
 app.get('/api/persons', (req, res) => {
@@ -86,8 +86,6 @@ app.post('/api/persons', (req, res) => {
     res.json(savedPerson)
   })
   .catch(error => next(error))
-  
-  persons = persons.concat(person)
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
