@@ -89,22 +89,25 @@ app.post('/api/persons', (req, res) => {
       error: 'Number missing.' 
     })
   }
-  if (checkName(body.name) !== undefined) {
+  /*if (checkName(body.name) !== undefined) {
     return res.status(400).json({ 
       error: `${body.name} is already added to the phonebook.` 
     })
-  }
+  }*/
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId(),
-  }
+  })
+
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
 
   persons = persons.concat(person)
 
   console.log(person)
-  res.json(person)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -115,9 +118,6 @@ app.delete('/api/persons/:id', (req, res) => {
   
 
 const PORT = process.env.PORT
-//const MONGODB_URI = process.env.MONGODB_URI
-//console.log(process.env.PORT)
-//console.log(process.env.MONGODB_URI)
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
