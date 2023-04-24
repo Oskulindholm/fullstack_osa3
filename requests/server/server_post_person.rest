@@ -1,0 +1,7 @@
+POST http://fullstack-part3-onkl.onrender.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "A",
+    "number": "1"
+}

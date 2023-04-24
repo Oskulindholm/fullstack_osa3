@@ -1,0 +1,1 @@
+GET http://fullstack-part3-onkl.onrender.com/api/apples
