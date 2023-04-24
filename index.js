@@ -115,8 +115,9 @@ app.delete('/api/persons/:id', (req, res) => {
   
 
 const PORT = process.env.PORT
-console.log(process.env.PORT)
-console.log(process.env.MONGODB_URI)
+//const MONGODB_URI = process.env.MONGODB_URI
+//console.log(process.env.PORT)
+//console.log(process.env.MONGODB_URI)
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
