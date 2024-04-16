@@ -29,9 +29,9 @@ const personSchema = new mongoose.Schema({
     type: String,
     minlength: 8,
     validate: {
-      validator: () => {
-        console.log('Validation tests: ' + /\d{2}-\d{7}/g.test() + ' ' + /\d{3}-\d{8}}/g.test())
-        return !(/\d{2}-\d{7}/g.test() || /\d{3}-\d{8}}/g.test())
+      validator: function(v) {
+        console.log('Validation tests: ' + /\d{2}-\d{7}/.test(v) + ' ' + /\d{3}-\d{8}/.test(v))
+        return !(/\d{2}-\d{7}/.test(v) || /\d{3}-\d{8}/.test(v))
       },
       message: "The number is malformatted"
     },
