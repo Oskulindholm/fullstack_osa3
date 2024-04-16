@@ -12,11 +12,6 @@ const url = `mongodb+srv://fullstack:${password}@cluster0.kcjhgri.mongodb.net/ph
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-})
-
 const Person = mongoose.model('Person', personSchema)
 
 switch (process.argv.length) {

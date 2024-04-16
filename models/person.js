@@ -7,6 +7,10 @@ const url = `${process.env.MONGODB_URI}`
 console.log(process.env.MONGODB_URI)
 console.log('connecting to', url)
 
+const checkNumber = number => {
+ return 
+}
+
 mongoose.connect(url)
   .then(res => {
     console.log('connected to MongoDB')
@@ -21,7 +25,18 @@ const personSchema = new mongoose.Schema({
     minlength: 3,
     required: true
   },
-  number: String
+  number: {
+    type: String,
+    minlength: 8,
+    validate: {
+      validator: () => {
+        console.log('Validation tests: ' + /\d{2}-\d{7}/g.test() + ' ' + /\d{3}-\d{8}}/g.test())
+        return !(/\d{2}-\d{7}/g.test() || /\d{3}-\d{8}}/g.test())
+      },
+      message: "The number is malformatted"
+    },
+    required: true
+  }
 })
 
 personSchema.set('toJSON', {
