@@ -30,16 +30,10 @@ const personSchema = new mongoose.Schema({
     minlength: 8,
     validate: {
       validator: function(v) {
-        return /\d{2}-\d{7}/.test(v)
+        return /\d{2,3}-\d{+}/.test(v)
       },
       message: "The number is malformatted"
-    },/*
-    validate: {
-      validator: function(f) {
-        return /\d{3}-\d{8}/.test(f)
-      },
-      message: "The number is malformatted"
-    },*/
+    },
     required: true
   }
 })
