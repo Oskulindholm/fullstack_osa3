@@ -1,8 +1,9 @@
+
 const mongoose = require('mongoose')
 
 if (process.argv.length<3) {
-  console.log('give password as argument')
-  process.exit(1)
+	console.log('give password as argument')
+	process.exit(1)
 }
 
 const password = process.argv[2]
@@ -12,39 +13,42 @@ const url = `mongodb+srv://fullstack:${password}@cluster0.kcjhgri.mongodb.net/ph
 mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
+// eslint-disable-next-line no-undef
 const Person = mongoose.model('Person', personSchema)
 
 switch (process.argv.length) {
-    case 3:
-        console.log('\nCurrent contacts:\n-----------------')
-        Person
-          .find({})
-          .then(persons => {
-            persons.forEach(person => {
-              console.log(`${person.name} ${person.number}`)
-            })
-            mongoose.connection.close()
-            console.log('-----------------')
-          })
-        break;
+case 3:
+	console.log('\nCurrent contacts:\n-----------------')
+	Person
+		.find({})
+		.then(persons => {
+			persons.forEach(person => {
+				console.log(`${person.name} ${person.number}`)
+			})
+			mongoose.connection.close()
+			console.log('-----------------')
+		})
+	break
 
-    case 5:
-        const person = new Person({
-            name: process.argv[3],
-            number: process.argv[4]
-        })
-        person
-          .save()
-          .then(res => {
-            console.log(`Added ${person.name} number ${person.number} to the phonebook.`)
-            mongoose.connection.close()
-        })
-        break;
+case 5: {
+	const person = new Person({
+		name: process.argv[3],
+		number: process.argv[4]
+	})
+	person
+		.save()
+		.then(() => {
+			console.log(`Added ${person.name} number ${person.number} to the phonebook.`)
+			mongoose.connection.close()
+		})
+	break
+}
 
-    default:
-        console.log('Invalid amount of arguments.\nPlease type both the name and the number of the person.')
-        mongoose.connection.close()
-        break;
+
+default:
+	console.log('Invalid amount of arguments.\nPlease type both the name and the number of the person.')
+	mongoose.connection.close()
+	break
 }
 
 /*
